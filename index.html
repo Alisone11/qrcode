@@ -11,14 +11,27 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <div id="reader" width="600px"></div>
+
+  <dialog>
+    <button autofocus>Close</button>
+    <p>This modal dialog has a groovy backdrop!</p>
+  </dialog>
+  <button>Show the dialog</button>
+  
+
 </body>
 </html>
 
-<script>
-  
+<script> 
+// let stopBtn;
+// stopBtn = document.querySelector('#html5-qrcode-button-camera-stop');
+let decodedText;
+
  function onScanSuccess(decodedText, decodedResult) {
     // handle the scanned code as you like, for example:
     console.log(`Code matched = ${decodedText}`, decodedResult);
+    dialog.showModal();
+    dialog.innerText=`'decodedText', ${decodedText}`;
   }
 
   function onScanFailure(error) {
@@ -30,8 +43,42 @@
   let html5QrcodeScanner = new Html5QrcodeScanner(
     "reader",
     { fps: 10, qrbox: {width: 250, height: 250} },
-    /* verbose= */ false);
+    /* verbose= */ false
+  );
+
   html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+  // stopBtn.addEventListener('click', stopScanning);
+  
+  function stopScanning(){
+    console.log('stopScanning');
+  }
+
+  // dialog
+  const dialog = document.querySelector("dialog");
+  const showButton = document.querySelector("dialog + button");
+  const closeButton = document.querySelector("dialog button");
+
+  // "Show the dialog" button opens the dialog modally
+  showButton.addEventListener("click", () => {
+    dialog.showModal();
+    dialog.innerText=`'decodedText', ${decodedText}, 'decodedResult', ${decodedResult}`;
+  });
+
+  // "Close" button closes the dialog
+  closeButton.addEventListener("click", () => {
+    dialog.close();
+  });
+
 
 </script>
 
+<style>
+  #reader {
+    position: relative;
+  }
+  #html5-qrcode-button-camera-stop {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+</style>
